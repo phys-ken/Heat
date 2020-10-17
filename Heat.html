@@ -3,220 +3,236 @@
 
 <!DOCTYPE html>
 <html lang="ja">
-<head><meta charset="utf-8"></head>
+
+<head>
+	<meta charset="utf-8">
+</head>
+
 <body>
-<h1>接触するとどうなるかな？<h1>
-<canvas id="can"></canvas>
-<script>
+	<h1>接触するとどうなるかな？<h1>
+			<input type="button" value="加熱！" onclick="OnButtonClick();" />　　<input type="button" value="冷却！"
+				onclick="OnButtonClick2();" /><br />
+			<canvas id="can"></canvas>
+			<script src="https://frogcat.github.io/canvas-arrow/canvas-arrow.js"></script>
+			<script>
 
-//フィールドサイズ
-const FIELD_COL = 20;
-const FIELD_ROW = 20;
+				//フィールドサイズ
+				const FIELD_COL = 20;
+				const FIELD_ROW = 20;
 
-//ブロック一つのサイズ(ピクセル)
-const BLOCK_SIZE = 30;
+				//ブロック一つのサイズ(ピクセル)
+				const BLOCK_SIZE = 30;
 
-//スクリーンサイズ
-const SCREEN_W = BLOCK_SIZE * FIELD_COL;
-const SCREEN_H = BLOCK_SIZE * FIELD_ROW;
+				//スクリーンサイズ
+				const SCREEN_W = BLOCK_SIZE * FIELD_COL;
+				const SCREEN_H = BLOCK_SIZE * FIELD_ROW;
 
-//テトロミノのサイズ
-const TETRO_SIZE =4;
+				//テトロミノのサイズ
+				const TETRO_SIZE = 4;
 
-//テトロミノ本体
-let tetro=[
-	[ 0, 0, 0, 0 ],
-	[ 0, 1, 1, 0 ],
-	[ 0, 1, 1, 0 ],
-	[ 0, 0, 0, 0 ]
-];
+				//テトロミノ本体
+				let tetro = [
+					[0, 0, 0, 0],
+					[0, 1, 1, 0],
+					[0, 1, 1, 0],
+					[0, 0, 0, 0]
+				];
 
-//テトロミノの座標
-let tetro_x = 2;
-let tetro_y = 2;
-
-
-//フィールド本体
-let field = [];
-
+				//テトロミノの座標
+				let tetro_x = 2;
+				let tetro_y = 2;
 
 
-let can = document.getElementById("can");
-let con = can.getContext("2d");
-
-can.width  = SCREEN_W;
-can.height = SCREEN_H;
-can.style.border = "4px solid #555";
-
-//stateの指定
-f_state = 0;
-t_state = 100;
-
-function getCol(state){
-  if (state > 50 ){
-		r = (255/50) * (state - 50);
-		g = (255/50) * (100 - state);
-		b = 0;
-	} else if(state < 50){
-		r = 0;
-		g = (255/50) * (state);
-		b = (255/50) * (50 - state);
-	} else {
-		r = 0;
-		g = 255;
-		b = 0;
-	}
-
-col = "rgb(" + String(r) + "," + String(g) + "," + String(b) + ")";
-console.log(col)
-return col;
-}
+				//フィールド本体
+				let field = [];
 
 
-init();
 
-//落ちるスピード
-const GAME_SPEED = 100;
-drawAll();
-setInterval(drawAll, GAME_SPEED );
+				let can = document.getElementById("can");
+				let con = can.getContext("2d");
 
-//初期化
-function init()
-{
-	//フィールドのクリア
-	for(let y=0; y<FIELD_ROW ; y++ )
-	{
-		field[y] = [];
-		for(let x=0; x<FIELD_COL ; x++ )
-		{
-			field[y][x] =0;
-		}
-	}
+				can.width = SCREEN_W;
+				can.height = SCREEN_H;
+				can.style.border = "4px solid #555";
 
-	field[13][6] = 1;
-	field[13][7] = 1;
-	field[12][6] = 1;
-	field[12][7] = 1;
-}
+				//stateの指定
+				f_state = 0;
+				t_state = 100;
 
-//ブロック一つを描画する
-function drawBlock(x,y,state)
-{
-	let px = x * BLOCK_SIZE;
-	let py = y * BLOCK_SIZE;
-	con.fillStyle= getCol(state);
-	con.fillRect(px,py,BLOCK_SIZE,BLOCK_SIZE);
+				function getCol(state) {
+					if (state > 50) {
+						r = (255 / 50) * (state - 50);
+						g = (255 / 50) * (100 - state);
+						b = 0;
+					} else if (state < 50) {
+						r = 0;
+						g = (255 / 50) * (state);
+						b = (255 / 50) * (50 - state);
+					} else {
+						r = 0;
+						g = 255;
+						b = 0;
+					}
 
-}
+					col = "rgb(" + String(r) + "," + String(g) + "," + String(b) + ")";
+					console.log(col)
+					return col;
+				}
 
-//全部描画する
-function drawAll()
-{
-	con.clearRect(0,0,SCREEN_W,SCREEN_H);
 
-if (checkMove( -1, 0 ) && checkMove(  0,-1 ) && checkMove(  1, 0 ) && checkMove(  0, 1 ) ){}
-else{
-	f_state = f_state + 0.01 * (t_state-f_state);
-	t_state = t_state + 0.01 *  (f_state-t_state);
+				init();
 
-}
+				//落ちるスピード
+				const GAME_SPEED = 100;
+				drawAll();
+				setInterval(drawAll, GAME_SPEED);
 
-  let moji1x = tetro_x * BLOCK_SIZE;
-	let moji1y = tetro_y * BLOCK_SIZE   + 10;
-  con.font = "20px serif";
-	con.fillStyle = "black";
-  con.fillText("物体A " + t_state.toFixed(2) + "度", moji1x ,  moji1y);
+				//初期化
+				function init() {
+					//フィールドのクリア
+					for (let y = 0; y < FIELD_ROW; y++) {
+						field[y] = [];
+						for (let x = 0; x < FIELD_COL; x++) {
+							field[y][x] = 0;
+						}
+					}
+					//低温物体を用意。
+					initBlockx = 12;
+					initBlocky = 12;
+					field[initBlocky][initBlockx] = 1;
+					field[initBlocky][initBlockx + 1] = 1;
+					field[initBlocky + 1][initBlockx] = 1;
+					field[initBlocky + 1][initBlockx + 1] = 1;
+				}
 
-	let moji2x = 6 * BLOCK_SIZE;
-	let moji2y = 15 * BLOCK_SIZE   + 10;
-  con.font = "20px serif";
-	con.fillStyle = "black";
-  con.fillText("物体B " + f_state.toFixed(2) + "度", moji2x ,  moji2y);
-
-	//フィールドを描画
-	for(let y=0; y<FIELD_ROW ; y++ )
-	{
-		for(let x=0; x<FIELD_COL ; x++ )
-		{
-			if( field[y][x] )
-			{
-				drawBlock(x,y, f_state ) ;
-			}
-		}
-	}
-
-  //ボックスを描画
-	for(let y=0; y<TETRO_SIZE ; y++ )
-	{
-		for(let x=0; x<TETRO_SIZE ; x++ )
-		{
-			if( tetro[y][x] )
-			{
-				drawBlock(tetro_x+x, tetro_y+y , t_state ) ;
-			}
-		}
-	}
-}
-
-// ブロックの衝突判定
-function checkMove( mx,my )
-{
-	for(let y=0; y<TETRO_SIZE ; y++ )
-	{
-		for(let x=0; x<TETRO_SIZE ; x++ )
-		{
-			if(  tetro[y][x]  )
-			{
-				let nx = tetro_x + mx + x;
-				let ny = tetro_y + my + y;
-				
-				if( ny < 0 ||
-					//nx < 0 ||
-					ny >= FIELD_ROW ||
-					//nx >= FIELD_COL  ||
-					 field[ny][nx] 
-				)
-				{
-					return false;
+				//ブロック一つを描画する
+				function drawBlock(x, y, state) {
+					let px = x * BLOCK_SIZE;
+					let py = y * BLOCK_SIZE;
+					con.fillStyle = getCol(state);
+					con.fillRect(px, py, BLOCK_SIZE, BLOCK_SIZE);
 
 				}
-			}
-		}
-	}
-	
-	return true;
-}
 
-//キーボードが押された時の処理
-document.onkeydown = function(e)
-{
-	switch( e.keyCode )
-	{
-		case 37:// 左
-			if( checkMove( -1, 0 ) )tetro_x--;
-			break;
-		case 38:// 上
-			if( checkMove(  0,-1 ) )tetro_y--;
-			break;
-		case 39:// 右
-			if( checkMove(  1, 0 ) )tetro_x++;
-			break;
-		case 40:// 下
-			if( checkMove(  0, 1 ) )tetro_y++;
-			break;
-		case 32:// スペース
-			break;
-	}
-	drawAll();
-}
-
-function checkMoveAll(){
+				//全部描画する
+				function drawAll() {
+					con.clearRect(0, 0, SCREEN_W, SCREEN_H);
+					con.beginPath();
 
 
 
-}
+					//温度の表示
+					let moji1x = (tetro_x + 1) * BLOCK_SIZE;
+					let moji1y = tetro_y * BLOCK_SIZE;
+					con.font = "20px serif";
+					con.fillStyle = "black";
+					con.fillText("物体A " + t_state.toFixed(2) + "度", moji1x, moji1y);
+
+					let moji2x = (initBlockx) * BLOCK_SIZE;
+					let moji2y = (initBlocky + 3) * BLOCK_SIZE;
+					con.font = "20px serif";
+					con.fillStyle = "black";
+					con.fillText("物体B " + f_state.toFixed(2) + "度", moji2x, moji2y);
+
+					//フィールドを描画
+					for (let y = 0; y < FIELD_ROW; y++) {
+						for (let x = 0; x < FIELD_COL; x++) {
+							if (field[y][x]) {
+								drawBlock(x, y, f_state);
+							}
+						}
+					}
+
+					//ボックスを描画
+					for (let y = 0; y < TETRO_SIZE; y++) {
+						for (let x = 0; x < TETRO_SIZE; x++) {
+							if (tetro[y][x]) {
+								drawBlock(tetro_x + x, tetro_y + y, t_state);
+							}
+						}
+					}
+
+					//当たり判定で温度を変更
+					if (checkMove(-1, 0) && checkMove(0, -1) && checkMove(1, 0) && checkMove(0, 1)) { }
+					else {
+						f_state = f_state + 0.01 * (t_state - f_state);
+						t_state = t_state + 0.01 * (f_state - t_state);
+
+						let fromx = (tetro_x + 2) * BLOCK_SIZE;
+						let fromy = (tetro_y + 2) * BLOCK_SIZE;
+						let goalx = (initBlockx + 1) * BLOCK_SIZE;
+						let goaly = (initBlocky + 1) * BLOCK_SIZE;
+						scale = (t_state - f_state) / 50
+						con.arrow(fromx, fromy, goalx, goaly, [0, 5 * scale, -20 * scale, 5 * scale, -20 * scale, 15 * scale]);
+						con.fillStyle = "black";
+						con.fill();
 
 
-</script>
+
+
+					}
+
+
+
+
+
+				}
+
+				// ブロックの衝突判定
+				function checkMove(mx, my) {
+					for (let y = 0; y < TETRO_SIZE; y++) {
+						for (let x = 0; x < TETRO_SIZE; x++) {
+							if (tetro[y][x]) {
+								let nx = tetro_x + mx + x;
+								let ny = tetro_y + my + y;
+
+								if (ny < 0 ||
+									//nx < 0 ||
+									ny >= FIELD_ROW ||
+									//nx >= FIELD_COL  ||
+									field[ny][nx]
+								) {
+									return false;
+
+								}
+							}
+						}
+					}
+
+					return true;
+				}
+
+				//キーボードが押された時の処理
+				document.onkeydown = function (e) {
+					switch (e.keyCode) {
+						case 37:// 左
+							if (checkMove(-1, 0)) tetro_x--;
+							break;
+						case 38:// 上
+							if (checkMove(0, -1)) tetro_y--;
+							break;
+						case 39:// 右
+							if (checkMove(1, 0)) tetro_x++;
+							break;
+						case 40:// 下
+							if (checkMove(0, 1)) tetro_y++;
+							break;
+						case 32:// スペース
+							break;
+					}
+					drawAll();
+				}
+
+				function OnButtonClick() {
+					t_state = 100;
+					//f_state = 0;
+				}
+				function OnButtonClick2() {
+					//t_state = 100;
+					f_state = 0;
+				}
+
+			</script>
 </body>
+
 </html>
