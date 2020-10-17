@@ -168,6 +168,14 @@
 					else {
 						f_state = f_state + 0.01 * (t_state - f_state);
 						t_state = t_state + 0.01 * (f_state - t_state);
+						let fromx = (tetro_x + 2) * BLOCK_SIZE;
+						let fromy = (tetro_y + 2) * BLOCK_SIZE;
+						let goalx = (initBlockx + 1) * BLOCK_SIZE;
+						let goaly = (initBlocky + 1) * BLOCK_SIZE;
+						scale = (t_state - f_state) / 50
+						con.arrow(fromx, fromy, goalx, goaly, [0, 5 * scale, -20 * scale, 5 * scale, -20 * scale, 15 * scale]);
+						con.fillStyle = "black";
+						con.fill();
 					}
 				}
 
